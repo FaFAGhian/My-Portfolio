@@ -14,6 +14,19 @@ document.addEventListener('mousemove', (e) => {
     }, 50);
 });
 
+// Ripple Effect (Works on Click/Touch)
+document.addEventListener('click', (e) => {
+    const ripple = document.createElement('div');
+    ripple.classList.add('ripple');
+    ripple.style.left = `${e.clientX}px`;
+    ripple.style.top = `${e.clientY}px`;
+    document.body.appendChild(ripple);
+
+    ripple.addEventListener('animationend', () => {
+        ripple.remove();
+    });
+});
+
 links.forEach(link => {
     link.addEventListener('mouseenter', () => {
         cursor.classList.add('active');
