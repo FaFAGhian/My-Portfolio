@@ -1008,6 +1008,18 @@ body.dark-mode .contact-card:hover {
     }
 }
 
+/* Visibility Classes for Observer */
+.hidden {
+    opacity: 0 !important;
+    transform: translateY(30px) !important;
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
 
 
 
@@ -1056,11 +1068,14 @@ footer {
         .glass-container,
         .timeline-content,
         .work-card,
-        .fact-card {
+        .fact-card,
+        .glass-card {
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             /* Softer shadow */
+            padding: 1.5rem !important;
+            /* Unified padding */
         }
 
         body.dark-mode .glass-container,
@@ -1189,10 +1204,66 @@ footer {
         }
 
         /* Grids & Layouts */
+        /* About Section Polish */
+        .about-section {
+            padding: 60px 0;
+            gap: 2.5rem;
+        }
+
         .about-content {
             grid-template-columns: 1fr;
-            gap: 3rem;
+            gap: 1.5rem;
             text-align: center;
+            padding: 2rem 1.5rem;
+            /* Reduced padding from 3rem */
+        }
+
+        .personal-grid,
+        .fun-facts-grid,
+        .work-style-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1.2rem;
+        }
+
+        .intro-card,
+        .work-card {
+            padding: 1.5rem !important;
+        }
+
+        .fact-card {
+            padding: 1.2rem !important;
+            flex-direction: row !important;
+            /* Row layout for facts on mobile */
+            justify-content: flex-start !important;
+            gap: 1.5rem !important;
+            text-align: left !important;
+        }
+
+        .fact-icon {
+            margin-bottom: 0 !important;
+            font-size: 1.8rem !important;
+        }
+
+        .fact-value {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            font-size: 1rem !important;
+        }
+
+        .sw-container {
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .sw-column {
+            width: 100%;
+            text-align: center;
+        }
+
+        .skills-list {
+            justify-content: center;
         }
 
         .lead-text {
@@ -1267,7 +1338,8 @@ footer {
 
         /* Adjust padding to prevent hidden content behind bottom nav */
         section {
-            padding-bottom: 3rem;
+            padding-top: 60px !important;
+            padding-bottom: 60px !important;
         }
 
         .contact-section {
@@ -1290,24 +1362,7 @@ footer {
     /* Scaling removed per request */
 }
 
-.ripple {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: rgba(212, 175, 55, 0.4);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    animation: ripple-anim 0.6s linear;
-    pointer-events: none;
-    z-index: 99999;
-}
 
-@keyframes ripple-anim {
-    to {
-        transform: translate(-50%, -50%) scale(20);
-        opacity: 0;
-    }
-}
 
 /* --- EASTER EGG: PARTY MODE --- */
 body.party-mode {

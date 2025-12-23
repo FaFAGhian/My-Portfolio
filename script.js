@@ -74,30 +74,9 @@ skillBars.forEach(bar => {
     skillObserver.observe(bar);
 });
 
-// Ripple Effect (Works on Click/Touch)
-document.addEventListener('click', (e) => {
-    const ripple = document.createElement('div');
-    ripple.classList.add('ripple');
-    ripple.style.left = `${e.clientX}px`;
-    ripple.style.top = `${e.clientY}px`;
-    document.body.appendChild(ripple);
 
-    ripple.addEventListener('animationend', () => {
-        ripple.remove();
-    });
-});
 
-links.forEach(link => {
-    link.addEventListener('mouseenter', () => {
-        cursor.classList.add('active');
-        follower.classList.add('active');
-    });
 
-    link.addEventListener('mouseleave', () => {
-        cursor.classList.remove('active');
-        follower.classList.remove('active');
-    });
-});
 
 // Intersection Observer for Scroll Animations
 const observerOptions = {
