@@ -1034,7 +1034,8 @@ footer {
         /* Global Adjustments */
         .section-title {
             font-size: 2rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            margin-top: 2rem;
         }
 
         .container {
@@ -1042,6 +1043,13 @@ footer {
         }
 
         /* Hero Section */
+        .hero-section {
+            height: auto;
+            min-height: 100vh;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
         .name {
             font-size: 2.5rem;
             /* Reduced from 3rem */
