@@ -1028,95 +1028,174 @@ footer {
         padding: 1.5rem 5%;
     }
 
-    .nav-links {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(250, 250, 250, 0.95);
-        backdrop-filter: blur(20px);
-        display: flex;
-        justify-content: space-evenly;
-        padding: 1rem 0;
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
 
-    .nav-links a {
-        margin: 0;
-        font-size: 0.8rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        opacity: 0.7;
-    }
+        /* Global Adjustments */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
 
-    .nav-links a:hover,
-    .nav-links a:active {
-        opacity: 1;
-        color: var(--accent);
-    }
+        .container {
+            padding: 0 1.5rem;
+        }
 
-    .contact-cards {
-        grid-template-columns: 1fr;
-        padding-bottom: 80px;
-        /* Space for bottom nav */
-    }
+        /* Hero Section */
+        .name {
+            font-size: 2.5rem;
+            /* Reduced from 3rem */
+            line-height: 1.2;
+            /* Added for proper spacing */
+            margin-left: 0;
+            margin-right: 0;
+            width: 100%;
+            white-space: normal;
+            border-right: none;
+            animation: none;
+            word-wrap: break-word;
+            /* Ensure long words break */
+            overflow-wrap: break-word;
+        }
 
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2rem;
-    }
+        .hero-content {
+            width: 100%;
+            padding-top: 0;
+            text-align: center;
+        }
 
-    .blob {
-        opacity: 0.4;
-        /* Adjusted for mobile light mode */
-    }
+        /* Navigation - Bottom Bar */
+        nav {
+            top: auto;
+            bottom: 0;
+            padding: 0;
+            height: auto;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
+        }
 
-    .personal-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
+        body.dark-mode nav {
+            background: rgba(10, 10, 10, 0.9);
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
 
-    .fun-facts-grid {
-        grid-template-columns: 1fr;
-    }
+        .logo {
+            display: none;
+            /* Hide logo on mobile to save space */
+        }
 
-    /* Phase 3 CSS Mobile */
-    .skills-grid {
-        grid-template-columns: 1fr;
-    }
+        .theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            /* Move theme toggle to top right since nav is bottom */
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
 
-    .tools-grid {
-        grid-template-columns: repeat(3, 1fr);
-        /* Keep spacing or adjust to 2 */
-    }
+        .nav-links {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0.8rem 0;
+            margin: 0;
+            background: transparent;
+            backdrop-filter: none;
+            position: static;
+            border: none;
+        }
 
-    .timeline::before {
-        left: 20px;
-    }
+        .nav-links a {
+            font-size: 0.75rem;
+            margin: 0;
+            flex-direction: column;
+            gap: 5px;
+            opacity: 0.6;
+        }
 
-    .timeline-item:nth-child(even),
-    .timeline-item:nth-child(odd) {
-        justify-content: flex-start;
-        padding-left: 50px;
-    }
+        .nav-links a.active,
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
 
-    .timeline-content {
-        width: 100%;
-    }
+        /* Grids & Layouts */
+        .about-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            text-align: center;
+        }
 
-    .timeline-date {
-        left: 20px;
-        top: 0;
-        transform: translate(-50%, -50%);
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
-    }
+        .skills-grid,
+        .projects-grid,
+        .contact-content {
+            grid-template-columns: 1fr;
+        }
 
-    .contact-content {
-        grid-template-columns: 1fr;
+        .projects-grid {
+            grid-template-columns: 1fr;
+            /* Force single column */
+            gap: 2rem;
+        }
+
+        .project-card {
+            min-width: 0;
+            /* Allow shrinking below 300px */
+        }
+
+        .contact-cards {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .tools-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        /* Timeline */
+        .timeline::before {
+            left: 20px;
+        }
+
+        .timeline-item:nth-child(even),
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-start;
+            padding-left: 50px;
+            text-align: left;
+        }
+
+        .timeline-content {
+            width: 100%;
+            padding: 1.5rem;
+        }
+
+        .timeline-date {
+            left: 20px;
+            top: 0;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        /* Adjust padding to prevent hidden content behind bottom nav */
+        section {
+            padding-bottom: 3rem;
+        }
+
+        .contact-section {
+            padding-bottom: 100px;
+            /* Extra space for bottom nav */
+        }
+
+        /* Hide background blobs or reduce them to prevent distraction */
+        .blob {
+            opacity: 0.3;
+        }
     }
 
 
