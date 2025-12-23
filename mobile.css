@@ -1035,8 +1035,8 @@ footer {
         padding: 1.5rem 5%;
     }
 
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
+    /* Mobile Responsive - Forced Active */
+    @media (min-width: 0px) {
 
         /* Global Adjustments */
         /* Global Adjustments */
