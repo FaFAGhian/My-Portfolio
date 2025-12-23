@@ -18,6 +18,14 @@
 </head>
 
 <body>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
     <!-- Background Animation -->
     <div class="background-animation">
         <div class="blob blob-1"></div>
@@ -26,8 +34,7 @@
     </div>
 
     <!-- Custom Cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+
 
     <nav>
         <div class="logo">GB.</div>
@@ -35,6 +42,10 @@
             <a href="#hero" class="nav-item">Home</a>
             <a href="#about" class="nav-item">About</a>
             <a href="#contact" class="nav-item">Contact</a>
+            <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark Mode">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
         </div>
     </nav>
 
@@ -54,22 +65,99 @@
             </div>
         </section>
 
+        <!-- Motto Section -->
+        <section class="motto-section">
+            <h2 class="motto-text">"Progress over perfection."</h2>
+        </section>
+
         <section id="about" class="about-section hidden">
             <div class="container">
                 <h2 class="section-title">About Me</h2>
+
+                <div class="personal-grid">
+                    <!-- Intro Card -->
+                    <div class="glass-card intro-card">
+                        <h3>Who I Am</h3>
+                        <p>
+                            I'm a 16-year-old creative developer who loves building things that live on the web.
+                            I focus on clean design, smooth interactions, and turning ideas into reality.
+                        </p>
+                    </div>
+
+
+
+                    <!-- Fun Facts -->
+                    <div class="fun-facts-grid">
+                        <div class="glass-card fact-card">
+                            <div class="fact-icon">🎮</div>
+                            <div class="fact-content">
+                                <span class="fact-label">Favorite Game</span>
+                                <span class="fact-value">Roblox</span>
+                            </div>
+                        </div>
+                        <div class="glass-card fact-card">
+                            <div class="fact-icon">🎸</div>
+                            <div class="fact-content">
+                                <span class="fact-label">Talent</span>
+                                <span class="fact-value">Playing Guitar</span>
+                            </div>
+                        </div>
+                        <div class="glass-card fact-card">
+                            <div class="fact-icon">🔥</div>
+                            <div class="fact-content">
+                                <span class="fact-label">Obsession</span>
+                                <span class="fact-value">Creative Coding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personality Section -->
+                <div class="personality-section">
+                    <h3 class="subsection-title">How I Work</h3>
+                    <div class="work-style-grid">
+                        <div class="glass-card work-card">
+                            <span class="work-icon">🧠</span>
+                            <h4>Creative</h4>
+                            <p>I find unique solutions to complex problems.</p>
+                        </div>
+                        <div class="glass-card work-card">
+                            <span class="work-icon">🔍</span>
+                            <h4>Detail-oriented</h4>
+                            <p>I obsess over pixels and smooth animations.</p>
+                        </div>
+                        <div class="glass-card work-card">
+                            <span class="work-icon">⚡</span>
+                            <h4>Fast Learner</h4>
+                            <p>I adapt quickly to new tech and tools.</p>
+                        </div>
+                    </div>
+
+                    <div class="sw-container">
+                        <div class="sw-column">
+                            <h3>Strengths</h3>
+                            <ul class="sw-list strengths">
+                                <li>Frontend Architecture</li>
+                                <li>Interactive Design</li>
+                                <li>Problem Solving</li>
+                            </ul>
+                        </div>
+                        <div class="sw-column">
+                            <h3>Weaknesses</h3>
+                            <ul class="sw-list weaknesses">
+                                <li>Perfectionism (Still working on it!)</li>
+                                <li>Too much coffee ☕</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="glass-container about-content">
                     <div class="about-text">
                         <p class="lead-text">
-                            I'm a 16-year-old passionate developer based in the Philippines.
-                            I love turning complex problems into beautiful, simple, and intuitive interface designs.
-                        </p>
-                        <p class="sub-text">
-                            When I'm not coding, I'm exploring new technologies and pushing the boundaries of what's
+                            I'm passionate about exploring new technologies and pushing the boundaries of what's
                             possible on the web.
                         </p>
-                    </div>
-                    <div class="skills-wrapper">
-                        <h3>Tech Stack</h3>
                         <ul class="skills-list">
                             <li><span class="skill-tag">Web Development</span></li>
                             <li><span class="skill-tag">UI/UX Design</span></li>
@@ -81,28 +169,234 @@
             </div>
         </section>
 
+        <!-- Skills & Tools Section -->
+        <section id="skills" class="skills-section">
+            <div class="container">
+                <h2 class="section-title">Skills & Tools</h2>
+
+                <div class="skills-grid">
+                    <!-- Skills Bars -->
+                    <div class="glass-card skills-card">
+                        <h3>Technical Skills</h3>
+                        <div class="skill-bar-container">
+                            <div class="skill-info">
+                                <span>Frontend Development</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-info">
+                                <span>UI/UX Design</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-info">
+                                <span>Creative Coding</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-info">
+                                <span>Backend (Node.js)</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tools Grid -->
+                    <div class="glass-card tools-card">
+                        <h3>Tools I Use</h3>
+                        <div class="tools-grid">
+                            <div class="tool-item">
+                                <span class="tool-icon">💻</span>
+                                <span class="tool-name">VS Code</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-icon">🎨</span>
+                                <span class="tool-name">Figma</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-icon">🎮</span>
+                                <span class="tool-name">Roblox Studio</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-icon">📸</span>
+                                <span class="tool-name">Photoshop</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-icon">🐱</span>
+                                <span class="tool-name">GitHub</span>
+                            </div>
+                            <div class="tool-item">
+                                <span class="tool-icon">🌐</span>
+                                <span class="tool-name">Chrome</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects-section">
+            <div class="container">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <a href="cosmic.html" target="_blank" class="project-card glass-card"
+                        aria-label="View Cosmic Explorer Project">
+                        <div class="project-image cosmic-bg">
+                            <span class="project-emoji">🚀</span>
+                        </div>
+                        <div class="project-info">
+                            <h3>Cosmic Explorer</h3>
+                            <p>An interactive educational platform about the solar system featuring 3D models and GSAP
+                                animations.</p>
+                            <div class="project-tags">
+                                <span class="tag">Three.js</span>
+                                <span class="tag">React</span>
+                                <span class="tag">GSAP</span>
+                            </div>
+                            <div class="project-learnings">
+                                <strong>Focus:</strong> 3D Rendering & Performance
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Project 2 -->
+                    <a href="#project-taskflow" class="project-card glass-card" aria-label="View TaskFlow Project">
+                        <div class="project-image task-bg">
+                            <span class="project-emoji">✅</span>
+                        </div>
+                        <div class="project-info">
+                            <h3>TaskFlow</h3>
+                            <p>A minimalist productivity app with drag-and-drop kanban boards and local storage
+                                persistence.</p>
+                            <div class="project-tags">
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">CSS Grid</span>
+                                <span class="tag">Local Storage</span>
+                            </div>
+                            <div class="project-learnings">
+                                <strong>Focus:</strong> State Management & UX
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Project 3 -->
+                    <a href="#project-neon" class="project-card glass-card" aria-label="View Neon City Project">
+                        <div class="project-image neon-bg">
+                            <span class="project-emoji">🌃</span>
+                        </div>
+                        <div class="project-info">
+                            <h3>Neon City</h3>
+                            <p>A collection of pure CSS art and animations demonstrating the power of modern CSS3
+                                features.</p>
+                            <div class="project-tags">
+                                <span class="tag">HTML5</span>
+                                <span class="tag">Advanced CSS</span>
+                                <span class="tag">Keyframes</span>
+                            </div>
+                            <div class="project-learnings">
+                                <strong>Focus:</strong> Artistic Coding
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="timeline-section">
+            <div class="container">
+                <h2 class="section-title">My Journey</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">2025</span>
+                        <div class="timeline-content glass-card">
+                            <h3>Present</h3>
+                            <p>Building advanced projects and mastering full-stack development.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">2023</span>
+                        <div class="timeline-content glass-card">
+                            <h3>Web Development</h3>
+                            <p>Started exploring HTML, CSS, and JS. Built my first websites.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">2022</span>
+                        <div class="timeline-content glass-card">
+                            <h3>Roblox Development</h3>
+                            <p>Scripting and building games on Roblox, sparking my interest in coding logic.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">2020</span>
+                        <div class="timeline-content glass-card">
+                            <h3>Started Coding</h3>
+                            <p>Wrote my first line of code. Fell in love with the ability to create.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="contact-section hidden">
             <div class="container">
                 <h2 class="section-title">Contact Me</h2>
                 <p class="contact-subtitle">Let's create something amazing together.</p>
 
-                <div class="contact-cards">
-                    <div class="card contact-card glass-card" data-copy="ghianborillo042009@gmail.com">
-                        <div class="card-icon">✉️</div>
-                        <h3>Email</h3>
-                        <p id="email-text">ghianborillo042009@gmail.com</p>
-                        <span class="copy-hint">Click to Copy</span>
-                    </div>
+                <div class="contact-content">
+                    <div class="contact-wrapper fade-in-up">
+                        <div class="contact-cards">
+                            <!-- Email Card -->
+                            <div class="contact-card glass-card">
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ghianborillo042009@gmail.com"
+                                    target="_blank" class="card-link" aria-label="Email Me on Gmail">
+                                    <i class="card-icon">✉️</i>
+                                    <h3>Email Me</h3>
+                                    <p>ghianborillo042009@gmail.com</p>
+                                </a>
+                                <button class="copy-btn" data-copy="ghianborillo042009@gmail.com"
+                                    aria-label="Copy Email">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
 
-                    <div class="card contact-card glass-card" data-copy="09763359229">
-                        <div class="card-icon">📞</div>
-                        <h3>Phone</h3>
-                        <p id="phone-text">09763359229</p>
-                        <span class="copy-hint">Click to Copy</span>
+                            <!-- Phone Card -->
+                            <div class="contact-card glass-card">
+                                <div class="card-content">
+                                    <div class="card-icon">📞</div>
+                                    <h3>Call Me</h3>
+                                    <p>09763359229</p>
+                                </div>
+                                <button class="copy-btn" data-copy="09763359229" aria-label="Copy Phone Number">
+                                    <span class="copy-icon">📋</span>
+                                    <span class="copy-text">Copy</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <footer>

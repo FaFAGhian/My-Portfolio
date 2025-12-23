@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Explorer | Solar System Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Exo 2', sans-serif;
+            color: #fff;
+            touch-action: none;
+            /* Prevent scroll on mobile */
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, #ffcc00, #ff6600);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 100, 0, 0.3);
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        #planet-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px) scale(0.9);
+            background: rgba(10, 10, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: left;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Bouncy pop effect */
+            pointer-events: none;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            transform-origin: center bottom;
+        }
+
+        #planet-info.active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        #planet-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--planet-color, #fff);
+        }
+
+        #planet-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        #planet-fact {
+            font-size: 0.95rem;
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: inherit;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .close-info {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container">
+        <canvas id="solar-system"></canvas>
+
+        <div id="ui-layer">
+            <h1>Cosmic Explorer</h1>
+            <p>Interactive 2D Simulation</p>
+        </div>
+
+        <div id="planet-info">
+            <button class="close-info" onclick="closeInfo()">&times;</button>
+            <span id="planet-name">Planet</span>
+            <span id="planet-type">Type</span>
+            <p id="planet-fact">Description goes here.</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="toggle-orbit">Orbit Lines: ON</button>
+            <button class="btn" onclick="window.close()">Exit</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('solar-system');
+        const ctx = canvas.getContext('2d');
+        const infoPanel = document.getElementById('planet-info');
+        const nameEl = document.getElementById('planet-name');
+        const typeEl = document.getElementById('planet-type');
+        const factEl = document.getElementById('planet-fact');
+        const orbitBtn = document.getElementById('toggle-orbit');
+
+        let width, height, centerX, centerY, scaleFactor;
+        let showOrbits = true;
+        let selectedPlanet = null; // Sticky selection
+
+        // Responsive Scaling
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            centerX = width / 2;
+            centerY = height / 2;
+            // Adjust scale based on screen size (Mobile vs Desktop)
+            scaleFactor = Math.min(width, height) / 1000;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Enhanced Planet Data
+        const planets = [
+            {
+                name: "Mercury",
+                type: "Terrestrial Planet",
+                colors: ["#A5A5A5", "#5c5c5c"],
+                size: 6,
+                orbit: 70,
+                speed: 0.05,
+                fact: "Mercury shrinks as it cools! It has gotten about 9 miles smaller over 4 billion years. It's the fastest planet, zipping around the Sun every 88 days."
+            },
+            {
+                name: "Venus",
+                type: "Terrestrial Planet",
+                colors: ["#E3BB76", "#CCA466"],
+                size: 10,
+                orbit: 100,
+                speed: 0.035,
+                fact: "Venus is hotter than Mercury despite being further away due to its thick atmosphere. It spins clockwise, so the Sun rises in the west!"
+            },
+            {
+                name: "Earth",
+                type: "Terrestrial Planet",
+                colors: ["#4F86F7", "#2D4C8E"],
+                size: 11,
+                orbit: 140,
+                speed: 0.025,
+                fact: "The only planet known to host life. It's not a perfect sphere; it bulges at the equator due to its rotation."
+            },
+            {
+                name: "Mars",
+                type: "Terrestrial Planet",
+                colors: ["#E27B58", "#A64B2A"],
+                size: 8,
+                orbit: 180,
+                speed: 0.02,
+                fact: "Home to Olympus Mons, the tallest volcano in the solar system (3x Everest!). Its red color comes from iron oxide (rust) in the soil."
+            },
+            {
+                name: "Jupiter",
+                type: "Gas Giant",
+                colors: ["#D39C7E", "#9C6A54"],
+                size: 25,
+                orbit: 260,
+                speed: 0.01,
+                fact: "The Great Red Spot is a storm that has raged for over 300 years and is larger than Earth. Jupiter has 95 moons!"
+            },
+            {
+                name: "Saturn",
+                type: "Gas Giant",
+                colors: ["#C5AB6E", "#8A7646"],
+                size: 22,
+                orbit: 350,
+                speed: 0.008,
+                fact: "Saturn's rings are made mostly of ice particles, some as small as dust, others as big as mountains. It's the least dense planet—it would float in a giant bathtub!",
+                hasRings: true
+            },
+            {
+                name: "Uranus",
+                type: "Ice Giant",
+                colors: ["#BBE1E4", "#86ACAF"],
+                size: 16,
+                orbit: 430,
+                speed: 0.005,
+                fact: "Uranus rolls on its side! Its axis is tilted 98 degrees. It's the coldest planet in the solar system, dropping to -224°C."
+            },
+            {
+                name: "Neptune",
+                type: "Ice Giant",
+                colors: ["#6081FF", "#3652AC"],
+                size: 16,
+                orbit: 500,
+                speed: 0.004,
+                fact: "Neptune has supersonic winds reaching 1,200 mph. It was the first planet located through mathematical calculations rather than a telescope."
+            }
+        ];
+
+        // Stars Background
+        const stars = [];
+        for (let i = 0; i < 600; i++) {
+            stars.push({
+                x: Math.random(),
+                y: Math.random(),
+                size: Math.random() * 1.5,
+                opacity: Math.random()
+            });
+        }
+
+        // Input Handling
+        let mouseX = 0;
+        let mouseY = 0;
+        let isInteracting = false;
+
+        function updateInput(x, y) {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = x - rect.left;
+            mouseY = y - rect.top;
+            isInteracting = true;
+        }
+
+        canvas.addEventListener('mousemove', e => updateInput(e.clientX, e.clientY));
+
+        // Touch Support
+        canvas.addEventListener('touchstart', e => {
+            e.preventDefault(); // Prevent scrolling
+            updateInput(e.touches[0].clientX, e.touches[0].clientY);
+            checkClick(); // Mobile tap to select
+        }, { passive: false });
+
+        canvas.addEventListener('click', checkClick);
+
+        orbitBtn.addEventListener('click', () => {
+            showOrbits = !showOrbits;
+            orbitBtn.innerText = `Orbit Lines: ${showOrbits ? 'ON' : 'OFF'}`;
+        });
+
+        function closeInfo() {
+            infoPanel.classList.remove('active');
+            selectedPlanet = null;
+        }
+
+        function checkClick() {
+            if (currentlyHovered) {
+                // Only animate if it's a different planet
+                if (selectedPlanet !== currentlyHovered) {
+                    selectedPlanet = currentlyHovered;
+                    showInfo(selectedPlanet);
+                }
+            } else {
+                closeInfo();
+            }
+        }
+
+        function showInfo(p) {
+            if (infoPanel.classList.contains('active')) {
+                // If open, close it briefly (pop down)
+                infoPanel.classList.remove('active');
+
+                // Wait for part of the closing animation, then pop up new info
+                setTimeout(() => {
+                    updateInfoContent(p);
+                    infoPanel.classList.add('active');
+                }, 300);
+            } else {
+                // If closed, just open it
+                updateInfoContent(p);
+                // Slight delay to ensure transition works
+                requestAnimationFrame(() => infoPanel.classList.add('active'));
+            }
+        }
+
+        function updateInfoContent(p) {
+            nameEl.innerText = p.name;
+            nameEl.style.setProperty('--planet-color', p.colors[0]);
+            typeEl.innerText = p.type;
+            factEl.innerText = p.fact;
+        }
+
+        let currentlyHovered = null;
+
+        function drawPlanet3D(ctx, x, y, size, colors) {
+            // Realistic sphere gradient
+            const grad = ctx.createRadialGradient(x - size / 3, y - size / 3, size / 10, x, y, size);
+            grad.addColorStop(0, colors[0]); // Light
+            grad.addColorStop(1, colors[1]); // Shadow
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Atmosphere/Glow
+            ctx.shadowBlur = size;
+            ctx.shadowColor = colors[0];
+            ctx.fillStyle = "rgba(255,255,255,0.1)";
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function drawSun(ctx, x, y) {
+            const size = 35 * (scaleFactor < 0.6 ? 0.8 : 1); // Scale down slightly on mobile
+
+            // Outer Glow
+            const glow = ctx.createRadialGradient(x, y, size, x, y, size * 3);
+            glow.addColorStop(0, "rgba(255, 200, 50, 0.4)");
+            glow.addColorStop(1, "rgba(255, 100, 0, 0)");
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(x, y, size * 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core
+            const core = ctx.createRadialGradient(x, y, size * 0.2, x, y, size);
+            core.addColorStop(0, "#fff");    // Hot center
+            core.addColorStop(0.2, "#ffcc00");
+            core.addColorStop(0.8, "#ff6600");
+            core.addColorStop(1, "#cc3300"); // Darker edge
+
+            ctx.fillStyle = core;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function draw() {
+            // Clear Background
+            ctx.fillStyle = "#050505";
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw Stars (Parallax)
+            stars.forEach(star => {
+                const x = (star.x * width + (mouseX - centerX) * 0.05 * star.opacity + width) % width;
+                const y = (star.y * height + (mouseY - centerY) * 0.05 * star.opacity + height) % height;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.beginPath();
+                ctx.arc(x, y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw Sun
+            drawSun(ctx, centerX, centerY);
+
+            let hoveredInFrame = null;
+            const time = Date.now() * 0.001;
+
+            planets.forEach(p => {
+                // Adaptive orbit sizing
+                const currentOrbit = p.orbit * (scaleFactor < 0.6 ? 0.7 : scaleFactor * 0.8);
+                const currentSize = p.size * (scaleFactor < 0.6 ? 0.8 : 1);
+
+                const angle = time * p.speed;
+                const x = centerX + Math.cos(angle) * currentOrbit;
+                const y = centerY + Math.sin(angle) * currentOrbit;
+
+                // Draw Orbit Line
+                if (showOrbits) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+                    ctx.lineWidth = 1;
+                    ctx.arc(centerX, centerY, currentOrbit, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Check Hover (Mouse or Touch proximity)
+                const dist = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+                if (dist < currentSize + 15) { // Generous hit area for touch
+                    hoveredInFrame = p;
+                    canvas.style.cursor = 'pointer';
+                    // Highlight Ring
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.beginPath();
+                    ctx.arc(x, y, currentSize + 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                drawPlanet3D(ctx, x, y, currentSize, p.colors);
+
+                // Draw Saturn's Rings
+                if (p.hasRings) {
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(Math.PI / 8);
+                    ctx.beginPath();
+                    ctx.strokeStyle = "rgba(200, 180, 150, 0.6)";
+                    ctx.lineWidth = currentSize * 0.3;
+                    ctx.ellipse(0, 0, currentSize * 2, currentSize * 0.5, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            });
+
+            currentlyHovered = hoveredInFrame;
+            if (!hoveredInFrame) canvas.style.cursor = 'default';
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+
+</html>
